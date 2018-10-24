@@ -9,12 +9,10 @@ We will be implementing a Linked List.
 - We will implement a LinkedList and Double LinkedList
 */
 
-// Below we have a Doubly Linked List
-// Golang's package for this is container/list
-
 type List struct {
-	head *Node
-	tail *Node
+	head   *Node
+	tail   *Node
+	length int
 }
 
 func (l *List) First() *Node {
@@ -23,6 +21,16 @@ func (l *List) First() *Node {
 
 func (l *List) Last() *Node {
 	return l.tail
+}
+
+func (l *List) Find(value int) *Node {
+	n := l.First()
+	for {
+		if n.value == value {
+			return n
+		}
+		n = n.Next()
+	}
 }
 
 func (l *List) Push(value int) {
@@ -34,6 +42,40 @@ func (l *List) Push(value int) {
 		node.prev = l.tail
 	}
 	l.tail = node
+	l.length += 1
+}
+
+func (l *List) Insert(value, position int) {
+	node := &Node{value: value}
+	n := l.First()
+	count := 0
+	if position == 0 {
+		l.head = node
+		node.next = n
+		n.prev = node
+		return
+	} else if position == l.length-1 {
+		node.prev = l.tail
+		l.tail = node
+		node.prev.next = node
+		return
+	}
+	for {
+		if count == position {
+			node.next = n
+			if n.prev != nil {
+				node.prev = n.Prev()
+				n.prev.next = node
+			}
+			n.prev = node
+			break
+		}
+		n = n.Next()
+		count += 1
+		if n == nil {
+			break
+		}
+	}
 }
 
 type Node struct {
@@ -51,11 +93,13 @@ func (n *Node) Prev() *Node {
 }
 
 func main() {
+	// Test cases
 	l := &List{}
 	l.Push(1)
 	l.Push(2)
 	l.Push(3)
 
+	l.Insert(7, 2)
 	n := l.First()
 	for {
 		println(n.value)
@@ -64,8 +108,9 @@ func main() {
 			break
 		}
 	}
-
+	println("-----")
 	n = l.Last()
+	// l.Insert(5, 0)
 	for {
 		println(n.value)
 		n = n.Prev()
