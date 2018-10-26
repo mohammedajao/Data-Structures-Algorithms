@@ -23,14 +23,17 @@ func NewQueue(size int) *Queue {
 
 func (q *Queue) Enqueue(item int) {
 	n := &Node{value: item}
-	if q.head == q.tail && q.length > 0 {
-		nodes := make([]*Node, len(q.data)+q.size)
-		copy(nodes, q.data[q.head:])
-		copy(nodes[len(q.data)-q.head:], q.data[:q.head])
-		q.head = 0
-		q.tail = len(q.data)
-		q.data = nodes
+	if (q.tail+1)%q.size == q.head {
+		panic("Queue is full")
 	}
+	// if q.head == q.tail && q.length > 0 {
+	// 	nodes := make([]*Node, len(q.data)+q.size)
+	// 	copy(nodes, q.data[q.head:])
+	// 	copy(nodes[len(q.data)-q.head:], q.data[:q.head])
+	// 	q.head = 0
+	// 	q.tail = len(q.data)
+	// 	q.data = nodes
+	// }
 	q.data[q.tail] = n
 	q.tail = (q.tail + 1) % q.size
 	q.length++
@@ -61,7 +64,7 @@ func (q *Queue) is_empty() bool {
 }
 
 func main() {
-	q := NewQueue(7)
+	q := NewQueue(6)
 	q.Enqueue(1)
 	q.Enqueue(2)
 	q.Enqueue(3)
@@ -76,6 +79,9 @@ func main() {
 	println(q.Dequeue().value)
 	println(q.Dequeue().value)
 	println(q.Dequeue().value)
+	q.Enqueue(8)
+	q.Enqueue(8)
 	println(q.Dequeue().value)
 	println(q.Dequeue().value)
+
 }
