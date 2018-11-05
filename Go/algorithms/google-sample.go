@@ -1,15 +1,20 @@
 package main
 
-func fibonacci_sequence(n int) {
-	a, b := 0, 1
-	for i := 0; i < n; i++ {
-		println(a)
-		a, b = a+b, a
+import "fmt"
+
+func fibonacci_sequence(n int, memo map[int]int) int { // Recursive O(n) solution with memoization
+	if n <= 0 {
+		return 0
+	} else if n == 1 {
+		return 1
+	} else {
+		memo[n] = fibonacci_sequence(n-1, memo) + fibonacci_sequence(n-2, memo)
 	}
-	dict := make(map[string]int)
-	dict["Age"] = 10
+	fmt.Println(memo)
+	return memo[n]
 }
 
 func main() {
-	fibonacci_sequence(10)
+	m := make(map[int]int)
+	println(fibonacci_sequence(6, m))
 }
